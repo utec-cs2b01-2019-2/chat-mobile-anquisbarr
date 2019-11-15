@@ -89,7 +89,8 @@
             android:text="LOG IN"
             android:textColor="#000000"
             android:textSize="20dp"
-            android:textStyle="normal|bold" />
+            android:textStyle="normal|bold"
+            android:onClick="onBtnLoginClicked"/>
     </RelativeLayout>
 
 </android.support.constraint.ConstraintLayout>
