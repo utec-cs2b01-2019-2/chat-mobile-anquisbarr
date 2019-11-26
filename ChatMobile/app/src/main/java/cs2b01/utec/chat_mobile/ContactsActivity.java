@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -37,6 +38,7 @@ public class ContactsActivity extends AppCompatActivity {
     @Override
     protected void onResume(){
         super.onResume();
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         getUsers();
     }
 
@@ -46,7 +48,7 @@ public class ContactsActivity extends AppCompatActivity {
 
     //Getting contacts from the server
     public void getUsers(){
-        String uri = "http://10.0.2.2:8000/users";
+        String uri = "http://10.0.2.2:5000/users";
         JSONArray jsonMessage = new JSONArray();
         final int user_id = getIntent().getExtras().getInt("user_id");
 
