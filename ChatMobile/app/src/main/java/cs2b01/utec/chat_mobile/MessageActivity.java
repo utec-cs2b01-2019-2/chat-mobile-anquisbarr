@@ -18,6 +18,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
@@ -72,7 +73,7 @@ public class MessageActivity extends AppCompatActivity {
     }
 
     public void getMessages(){
-        final int userFromId = getIntent().getExtras().getInt("user_from_id");
+        /*final int userFromId = getIntent().getExtras().getInt("user_from_id");
         final int userToId = getIntent().getExtras().getInt("user_to_id");
 
         String uri = "http://10.0.2.2:5000/messages/"+userFromId+"/"+userToId;
@@ -95,6 +96,41 @@ public class MessageActivity extends AppCompatActivity {
         );
 
         RequestQueue queue = Volley.newRequestQueue(this);
+        queue.add(request);
+    */
+        final String userFromId = getIntent().getExtras().get("user_from_id").toString();
+        final String userToId = getIntent().getExtras().get("user_to_id").toString();
+        String url = "http://10.0.2.2:5000/messages/<user_from_id>/<user_to_id>";
+        url = url.replace("<user_from_id>", userFromId);
+        url = url.replace("<user_to_id>", userToId);
+        RequestQueue queue = Volley.newRequestQueue(this);
+
+        JsonArrayRequest request= new JsonArrayRequest(
+                Request.Method.GET,
+                url,
+                null,
+                new Response.Listener<JSONArray>() {
+                    @Override
+                    public void onResponse(JSONArray response) {
+                        try {
+                            for (int i=0;i<response.length();i++){
+                                messages.put(i,response.getJSONObject(i));
+                            }
+                            int uID = Integer.parseInt(userFromId);
+                            mAdapter = new MessageAdapter(messages, getActivity(), uID);
+                            mRecyclerView.setAdapter(mAdapter);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        error.printStackTrace();
+                    }
+                }
+        );
         queue.add(request);
     }
 
